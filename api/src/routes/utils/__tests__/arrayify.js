@@ -19,18 +19,24 @@
 // it up if needed. Then continue the cycle until you cover all use cases.
 import arrayify from '../arrayify'
 
+test('when receives an empty arg return an empty array', () => {
+  const argument = []
+  const result = arrayify(argument)
 
-//////// Elaboration & Feedback /////////
-// When you've finished with the exercises:
-// 1. Copy the URL below into your browser and fill out the form
-// 2. remove the `.skip` from the test below
-// 3. Change submitted from `false` to `true`
-// 4. And you're all done!
-/*
-http://ws.kcd.im/?ws=Testing&e=TDD&em=
-*/
-test.skip('I submitted my elaboration and feedback', () => {
-  const submitted = false // change this when you've submitted!
-  expect(true).toBe(submitted)
+  expect(result).toEqual([])
 })
-////////////////////////////////
+
+test('when receives an array return the same', () => {
+  const argument = [1, 2, 3]
+  const result = arrayify(argument)
+
+  expect(result).toEqual(argument)
+})
+
+test('when receives an argument return an array', () => {
+  const argument = '123'
+  const result = arrayify(argument)
+
+  expect(result).toEqual([argument])
+})
+
