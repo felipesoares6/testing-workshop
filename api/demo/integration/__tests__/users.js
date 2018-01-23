@@ -3,45 +3,35 @@ import axios from 'axios'
 
 let server
 
-beforeAll(() => {
-  return startServer()
-    .then(s => {
-      server = s
-    })
+beforeAll(async () => {
+  server = await startServer()
 })
 
 afterAll(done => {
   server.close(done)
 })
 
-test('can get users', () => {
-  return axios.get('http://localhost:3001/api/users')
-    .then(response => {
-      const user = response.data.users[0]
+test('can get users', async () => {
+  const response = await axios.get('http://localhost:3001/api/users')
+  const user = response.data.users[0]
 
-      expect(user).toMatchObject({
-        name: expect.any(String),
-        username: expect.any(String)
-      })
-    })
+  expect(user).toMatchObject({
+    name: expect.any(String),
+    username: expect.any(String)
+  })
 })
 
-test('can get 2 users at offset 3', () => {
-  const fiveUsersPromise = axios
+test('can get 2 users at offset 3', async () => {
+  const fiveUsers = await axios
     .get('http://localhost:3001/api/users?limit=5')
     .then(response => response.data.users)
-  const twoUsersPromise = axios
+  const twoUsers = await axios
     .get('http://localhost:3001/api/users?offset=3')
     .then(response => response.data.users)
 
-  return Promise
-    .all([fiveUsersPromise, twoUsersPromise])
-    .then(responses => {
-      const [fiveUsers, twoUsers] = responses
-      const [firstUser, secondUser] = twoUsers
-      const [, , , firstUserAll, secondUserAll] = fiveUsers
+  const [firstUser, secondUser] = twoUsers
+  const [, , , firstUserAll, secondUserAll] = fiveUsers
 
-      expect(firstUser).toEqual(firstUserAll)
-      expect(secondUser).toEqual(secondUserAll)
-    })
+  expect(firstUser).toEqual(firstUserAll)
+  expect(secondUser).toEqual(secondUserAll)
 })
