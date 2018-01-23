@@ -28,6 +28,22 @@ test('can get articles with limit', async () => {
   expect(articles).toHaveLength(limit)
 })
 
+describe('authenticated', () => {
+  let cleanupUser
+
+  beforeAll(async () => {
+    const result = await createNewUser()
+    const token = result.user.token
+    api.defaults.headers.common.authorization = `Token ${token}`
+
+    cleanupUser = result.cleanup
+  })
+
+  afterAll(() => {
+    api.defaults.headers.common.authorization = ''
+    return cleanupUser()
+  })
+})
 
 // I've left this here for you as a little utility that's a little
 // domain-specific and isn't super pertinent to learning testing :)
