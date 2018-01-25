@@ -13,6 +13,34 @@ import {Component as Editor} from '../editor'
 //   and play around with the tag component. How could we use some
 //   of the utilities to make sure that interaction keeps working?
 
+test('renders the editor with defaults', () => {
+  const wrapper = mountEditor()
+
+  expect(wrapper).toMatchSnapshot()
+})
+
+test('renders the given title', () => {
+  const title = 'Top'
+  const wrapper = mountEditor({title})
+  const titleInput = wrapper.find(sel('title'))
+
+  expect(titleInput.node.value).toBe(title)
+})
+
+test('adds a tag when the user hits enter in the tagInput', () => {
+  const newTag = 'top'
+  const tagList = ['web', 'hack']
+  const wrapper = mountEditor({tagList})
+  const tagInput = wrapper.find(sel('tags'))
+
+  changeInputValue(tagInput, newTag)
+  keyUpInput(tagInput, 13)
+
+  const tagPills = wrapper.find(sel('tag-pills'))
+
+  expect(tagPills.children()).toHaveLength(3)
+})
+
 // I'm going to go ahead and give these utils to you
 // because I think you get the idea :)
 // And this is a little domain-specific anyway.
